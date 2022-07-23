@@ -1,5 +1,7 @@
+import 'dart:convert';
+
+import 'music.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,281 +13,203 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Music'),
+      home: new Home(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  List MusicList = [
-    {
-      'title': "La Min Lay",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/-La_min_Lay_(getmp3.pro).mp3",
-    },
-    {
-      'title': "Amazing Day",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Amazing_Day_(getmp3.pro).mp3",
-    },
-    {
-      'title': "Let Somebody GO",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Coldplay+X+Selena+Gomez+-+Let+Somebody+Go+(Official+Video).mp3",
-    },
-    {
-      'title': "Min A Chit Kyaunt",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/min_a_chit_kyaunt.mp3",
-    },
-    {
-      'title': "Amazing Day",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Amazing_Day_(getmp3.pro).mp3",
-    },
-    {
-      'title': "A Way",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Hugh_Grant_Haley_Bennett_-_A_Way_(getmp3.pro).mp3",
-    }
+class _HomeState extends State<Home> {
+  bool eye = true;
+  var username = '';
+  var password = '';
+
+  List User = [
+    {'username': 'heinminaye', 'password': '1234pss'}
   ];
-  String currentTitle = '';
-  String currentSinger = '';
-  String currentSong = '';
-  AudioPlayer audioPlayer = AudioPlayer();
 
-  bool play = false;
+  bool check = false;
 
-  Duration duration = new Duration();
-  Duration position = new Duration();
-
-  void playMusic(String url) async {
-    if (play && currentSong != url) {
-      int result = await audioPlayer.play(url);
-      if (result == 1) {
-        setState(() {
-          currentSong = url;
-        });
-      }
-    } else if (!play) {
-      int result = await audioPlayer.play(url);
-      if (result == 1) {
-        setState(() {
-          play = true;
-        });
-      }
-    }
-  }
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Container(
-          color: Colors.black12,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        child: Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage('images/music.jpeg'),
-                          width: 60,
-                          height: 60,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          currentTitle,
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(6),
-                        ),
-                        Text(
-                          currentSinger,
-                          style: TextStyle(color: Colors.white60),
-                        ),
-                      ],
-                    ),
-                  ],
+    return Container(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Image(
+                            image: AssetImage('images/Mu.png'),
+                            width: 280,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: const [
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          TextField(
+                            controller: usernameController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              labelText: "Username",
+                              labelStyle: TextStyle(
+                                color: Colors.white,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.person,
+                                color: Colors.white70,
+                              ),
+                              hintText: "Enter your username",
+                              hintStyle: TextStyle(color: Colors.white38),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 1, color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1,
+                                    color: Color.fromARGB(255, 177, 177, 177)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          TextField(
+                            controller: passwordController,
+                            obscureText: eye,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                                labelText: "Password",
+                                labelStyle: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                                hintText: "Enter your password",
+                                hintStyle:
+                                    const TextStyle(color: Colors.white38),
+                                prefixIcon: const Icon(
+                                  Icons.lock,
+                                  color: Colors.white70,
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 1, color: Colors.grey),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1,
+                                      color:
+                                          Color.fromARGB(255, 177, 177, 177)),
+                                ),
+                                suffixIcon: IconButton(
+                                    splashRadius: 5,
+                                    iconSize: 20,
+                                    onPressed: () {
+                                      setState(() {
+                                        eye = !eye;
+                                      });
+                                    },
+                                    icon: eye
+                                        ? const Icon(
+                                            Icons.remove_red_eye,
+                                            color: Colors.white54,
+                                          )
+                                        : const Icon(
+                                            Icons.visibility_off,
+                                            color: Colors.white54,
+                                          ))),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                              width: double.infinity,
+                              height: 45,
+                              child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      print(
+                                          '${usernameController.text} ${passwordController.text}');
+
+                                      if (usernameController.text ==
+                                              User[0]['username'] &&
+                                          passwordController.text ==
+                                              User[0]['password']) {
+                                        print(">>>>>>>>User login");
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MyMusic()),
+                                        );
+                                      } else {
+                                        const snackBar = SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                            'Login Failed',
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
+                                    });
+                                  },
+                                  child: const Text(
+                                    'LOGIN',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )))
+                        ]),
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: IconButton(
-                      splashRadius: 20,
-                      onPressed: () {
-                        if (play) {
-                          audioPlayer.pause();
-                          setState(() {
-                            play = false;
-                          });
-                        } else {
-                          audioPlayer.resume();
-                          setState(() {
-                            play = true;
-                          });
-                        }
-                      },
-                      icon: (play)
-                          ? const Icon(Icons.pause)
-                          : const Icon(Icons.play_arrow)),
-                ),
-              ]),
+              )
             ],
           ),
-        ),
-      ),
-      backgroundColor: Colors.blueAccent,
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                CustomList(
-                  title: MusicList[0]['title'],
-                  singer: MusicList[0]['singer'],
-                  currentList: () {
-                    playMusic(MusicList[0]['url']);
-                    setState(() {
-                      currentTitle = MusicList[0]['title'];
-                      currentSinger = MusicList[0]['singer'];
-                    });
-                  },
-                ),
-                CustomList(
-                  title: MusicList[1]['title'],
-                  singer: MusicList[1]['singer'],
-                  currentList: () {
-                    playMusic(MusicList[1]['url']);
-                    setState(() {
-                      currentTitle = MusicList[1]['title'];
-                      currentSinger = MusicList[1]['singer'];
-                    });
-                  },
-                ),
-                CustomList(
-                  title: MusicList[2]['title'],
-                  singer: MusicList[2]['singer'],
-                  currentList: () {
-                    playMusic(MusicList[2]['url']);
-                    setState(() {
-                      currentTitle = MusicList[2]['title'];
-                      currentSinger = MusicList[2]['singer'];
-                    });
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class CustomList extends StatelessWidget {
-  var title;
-  var singer;
-  Function currentList;
-  CustomList({Key? key, this.title, this.singer, required this.currentList})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          gradient: LinearGradient(
-            colors: [
-              Colors.white.withOpacity(0.40),
-              Colors.white.withOpacity(0.30),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          color: Colors.white,
-        ),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.transparent,
-            shadowColor: Colors.transparent,
-          ),
-          onPressed: () {
-            return currentList();
-          },
-          child: Row(children: [
-            const Padding(
-                padding: EdgeInsets.all(10),
-                child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    child: Image(
-                      image: AssetImage("images/music.jpeg"),
-                      fit: BoxFit.cover,
-                      width: 60,
-                      height: 60,
-                    ))),
-            const SizedBox(
-              width: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 18),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(7),
-                ),
-                Text(
-                  singer,
-                  style: TextStyle(color: Colors.white60),
-                ),
-              ],
-            )
-          ]),
         ),
       ),
     );
