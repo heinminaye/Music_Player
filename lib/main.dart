@@ -1,7 +1,13 @@
 import 'dart:convert';
 
+import 'package:music/login.dart';
+
 import 'music.dart';
+import 'login.dart';
+import 'register.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +19,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/login': (context) => const MyLogin(),
+        '/register': (context) => MyRegister(),
+        '/music': (context) => const MyMusic(),
+      },
       debugShowCheckedModeBanner: false,
       home: new Home(),
     );
@@ -43,173 +55,76 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Stack(
-            children: <Widget>[
-              SingleChildScrollView(
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Image(
-                            image: AssetImage('images/Mu.png'),
-                            width: 280,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.0),
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          TextField(
-                            controller: usernameController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: const InputDecoration(
-                              labelText: "Username",
-                              labelStyle: TextStyle(
-                                color: Colors.white,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color: Colors.white70,
-                              ),
-                              hintText: "Enter your username",
-                              hintStyle: TextStyle(color: Colors.white38),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1, color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromARGB(255, 177, 177, 177)),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          TextField(
-                            controller: passwordController,
-                            obscureText: eye,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                                labelText: "Password",
-                                labelStyle: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                                hintText: "Enter your password",
-                                hintStyle:
-                                    const TextStyle(color: Colors.white38),
-                                prefixIcon: const Icon(
-                                  Icons.lock,
-                                  color: Colors.white70,
-                                ),
-                                enabledBorder: const OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(width: 1, color: Colors.grey),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 1,
-                                      color:
-                                          Color.fromARGB(255, 177, 177, 177)),
-                                ),
-                                suffixIcon: IconButton(
-                                    splashRadius: 5,
-                                    iconSize: 20,
-                                    onPressed: () {
-                                      setState(() {
-                                        eye = !eye;
-                                      });
-                                    },
-                                    icon: eye
-                                        ? const Icon(
-                                            Icons.remove_red_eye,
-                                            color: Colors.white54,
-                                          )
-                                        : const Icon(
-                                            Icons.visibility_off,
-                                            color: Colors.white54,
-                                          ))),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                              width: double.infinity,
-                              height: 45,
-                              child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      print(
-                                          '${usernameController.text} ${passwordController.text}');
-
-                                      if (usernameController.text ==
-                                              User[0]['username'] &&
-                                          passwordController.text ==
-                                              User[0]['password']) {
-                                        print(">>>>>>>>User login");
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const MyMusic()),
-                                        );
-                                      } else {
-                                        const snackBar = SnackBar(
-                                          backgroundColor: Colors.red,
-                                          content: Text(
-                                            'Login Failed',
-                                          ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      }
-                                    });
-                                  },
-                                  child: const Text(
-                                    'LOGIN',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )))
-                        ]),
-                  ),
-                ),
-              )
-            ],
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.transparent,
+          elevation: 0,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Color.fromARGB(255, 78, 78, 78)),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/register');
+                      },
+                      child: Text(
+                        "Register",
+                        style: GoogleFonts.aBeeZee(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ))),
+              const SizedBox(
+                width: 10,
+              ),
+              SizedBox(
+                  width: 200,
+                  height: 40,
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      child: Text(
+                        "Login",
+                        style: GoogleFonts.aBeeZee(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ))),
+            ]),
           ),
+        ),
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(children: [
+                  const Image(
+                    image: AssetImage('images/music_group.png'),
+                    width: 500,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Music Player",
+                    style: GoogleFonts.sacramento(
+                        color: Colors.white, fontSize: 40),
+                  ),
+                ]),
+              ),
+            )
+          ],
         ),
       ),
     );

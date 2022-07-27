@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:music/main.dart';
+import 'main.dart';
 
 class MyMusic extends StatefulWidget {
   const MyMusic({Key? key}) : super(key: key);
@@ -113,14 +114,15 @@ class _MyMusicState extends State<MyMusic> {
                       children: [
                         Text(
                           currentTitle,
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
                         ),
                         const Padding(
                           padding: EdgeInsets.all(6),
                         ),
                         Text(
                           currentSinger,
-                          style: TextStyle(color: Colors.white60),
+                          style: const TextStyle(color: Colors.white60),
                         ),
                       ],
                     ),
@@ -157,25 +159,29 @@ class _MyMusicState extends State<MyMusic> {
       ),
       backgroundColor: Colors.blueAccent,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           const Text("Music"),
-          ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(Color.fromARGB(255, 211, 74, 64)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+          Container(
+            height: 25,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      Color.fromARGB(255, 211, 74, 64)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                   ),
                 ),
-              ),
-              onPressed: () {
-                Navigator.pop(
-                  context,
-                );
-              },
-              child: const Text("Logout"))
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                  );
+                },
+                child: const Text("Logout")),
+          )
         ]),
       ),
       body: Column(
