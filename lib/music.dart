@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:music/main.dart';
 import 'main.dart';
+import 'songList.dart';
 
 class MyMusic extends StatefulWidget {
   const MyMusic({Key? key}) : super(key: key);
@@ -11,53 +12,13 @@ class MyMusic extends StatefulWidget {
 }
 
 class _MyMusicState extends State<MyMusic> {
-  List MusicList = [
-    {
-      'title': "La Min Lay",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/-La_min_Lay_(getmp3.pro).mp3",
-    },
-    {
-      'title': "Amazing Day",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Amazing_Day_(getmp3.pro).mp3",
-    },
-    {
-      'title': "Let Somebody GO",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Coldplay+X+Selena+Gomez+-+Let+Somebody+Go+(Official+Video).mp3",
-    },
-    {
-      'title': "Min A Chit Kyaunt",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/min_a_chit_kyaunt.mp3",
-    },
-    {
-      'title': "Amazing Day",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Amazing_Day_(getmp3.pro).mp3",
-    },
-    {
-      'title': "A Way",
-      'singer': "Artist",
-      'url':
-          "https://msicoursematerial.s3.us-west-2.amazonaws.com/Hugh_Grant_Haley_Bennett_-_A_Way_(getmp3.pro).mp3",
-    }
-  ];
+  Playlist playlist = Playlist();
   String currentTitle = '';
   String currentSinger = '';
   String currentSong = '';
   AudioPlayer audioPlayer = AudioPlayer();
 
   bool play = false;
-
-  Duration duration = new Duration();
-  Duration position = new Duration();
 
   bool check = true;
 
@@ -185,49 +146,24 @@ class _MyMusicState extends State<MyMusic> {
         ]),
       ),
       body: Column(
-        children: <Widget>[
-          SingleChildScrollView(
+        children: [
+          Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  CustomList(
-                    title: MusicList[0]['title'],
-                    singer: MusicList[0]['singer'],
-                    currentList: () {
-                      playMusic(MusicList[0]['url']);
-                      setState(() {
-                        currentTitle = MusicList[0]['title'];
-                        currentSinger = MusicList[0]['singer'];
-                        check = false;
-                      });
-                    },
-                  ),
-                  CustomList(
-                    title: MusicList[1]['title'],
-                    singer: MusicList[1]['singer'],
-                    currentList: () {
-                      playMusic(MusicList[1]['url']);
-                      setState(() {
-                        currentTitle = MusicList[1]['title'];
-                        currentSinger = MusicList[1]['singer'];
-                        check = false;
-                      });
-                    },
-                  ),
-                  CustomList(
-                    title: MusicList[2]['title'],
-                    singer: MusicList[2]['singer'],
-                    currentList: () {
-                      playMusic(MusicList[2]['url']);
-                      setState(() {
-                        currentTitle = MusicList[2]['title'];
-                        currentSinger = MusicList[2]['singer'];
-                        check = false;
-                      });
-                    },
-                  ),
-                ],
+              padding: const EdgeInsets.all(10.0),
+              child: ListView.builder(
+                itemCount: playlist.getLength(),
+                itemBuilder: ((context, index) => CustomList(
+                      title: playlist.getTitle(index),
+                      singer: playlist.getArtist(index),
+                      currentList: () {
+                        playMusic(playlist.getUrl(index));
+                        setState(() {
+                          currentTitle = playlist.getTitle(index);
+                          currentSinger = playlist.getArtist(index);
+                          check = false;
+                        });
+                      },
+                    )),
               ),
             ),
           )
